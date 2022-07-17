@@ -10,13 +10,13 @@ class lifo:
         if not self.Full():
             self.queue.append(item)
         else:
-            print("Error: Queue is full.")      #TODO: Exception
+            raise Exception("Error: Queue is full.")
 
     def Get(self):
         if not self.Empty():
             return self.queue.pop()
         else:
-            print("Error: Queue is empty.")     #TODO: Exception
+            raise Exception("Error: Queue is empty.")
 
     def Empty(self):
         return self.Qsize() == 0

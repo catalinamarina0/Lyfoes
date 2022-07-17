@@ -18,26 +18,36 @@ class lyfo:
         else:
             return True
 
+    #TODO: Kees vindt single point of return beter.
     def CanPutInto(self,ball):
         if self.storage.Full():
             return False
         elif ball == self.storage.Peek():
             return True
-        elif len(self.storage.queue) == 0:
+        elif self.storage.Empty():
             return True
         else:
             return False
 
-    def MoveBall(frm,to):
+    def MoveBall_withCheck(frm,to):
         if frm.finished:
-            print("Error: Lyfo is finished.")   #TODO: Exception
-        if to.nrColors == 0:
-            to.nrColors += 1
+            raise Exception("Illegal move: Lyfo is finished.")
         ball = frm.storage.Get()
         if not to.CanPutInto(ball):
-            print("Error: Not the same color.") #TODO: Exception
+            raise Exception(f"Illegal move: Can't put ball '{ball}' in lyfo.")
         else:
             to.storage.Put(ball)
+        if to.nrColors == 0:
+            to.nrColors += 1
+        if not ball in frm.storage.Show():
+            frm.nrColors -= 1
+        to.Finished()
+
+    def MoveBall(frm,to):
+        ball = frm.storage.Get()
+        to.storage.Put(ball)
+        if to.nrColors == 0:
+            to.nrColors += 1
         if not ball in frm.storage.Show():
             frm.nrColors -= 1
         to.Finished()

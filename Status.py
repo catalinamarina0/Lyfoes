@@ -1,23 +1,18 @@
 from Lyfo import lyfo
 import copy
+import operator
 
 class status:
     def __init__(self,tubes):
         self.lyfoes = [lyfo(tube) for tube in tubes]
+        self.Sort()
         self.nrLyfoes = len(self.lyfoes)
     
-    def Removable(self):
-        self.removable = [frm for frm in self.lyfoes if frm.CanGetFrom()]
-
-    def MovableTo(self,ball):
-        return [to for to in self.lyfoes if to.CanPutInto(ball)]
-
     def IsLegalMove(self,frmIndex,toIndex):
         return (frmIndex != toIndex 
                 and self.lyfoes[frmIndex].CanGetFrom() 
                 and self.lyfoes[toIndex].CanPutInto(self.lyfoes[frmIndex].Peek()))
 
-    #TODO: Bypasses the functions Removable() and MovableTo(). Delete?
     def LegalMoves(self):
         self.moves = {(frmIndex,toIndex) for frmIndex in range(len(self.lyfoes)) 
                     for toIndex in range(len(self.lyfoes)) 
@@ -38,9 +33,15 @@ class status:
         for move in self.moves:
             stat = self.Copy()
             stat.Move(move)
+            stat.Sort()
             self.newStatuses.append(stat)
 
-    #TODO: Not exactly what I want, but it'll do for now.
+    def NewStatuses(self):
+        return self.newStatuses
+
+    def Sort(self):
+        self.lyfoes.sort(key=operator.attrgetter('storage.queue'))  #TODO: Private
+
     def Equals(self,other):
         for lyfoIndex in range(len(self.lyfoes)):
             if not self.lyfoes[lyfoIndex].Equals(other.lyfoes[lyfoIndex]):
@@ -75,7 +76,8 @@ class field:
 
     def AddNewStatuses(self,stat: status):
         lst = []
-        for newStatus in stat.newStatuses:    #TODO: Private
+        newStatuses = stat.NewStatuses()
+        for newStatus in newStatuses:
             if self.IsNewStatus(newStatus):
                 self.AddStatus(newStatus)
                 lst.append(newStatus)
