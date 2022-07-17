@@ -29,7 +29,7 @@ class lyfo:
         else:
             return False
 
-    def MoveBall_withCheck(frm,to):
+    def MoveBall(frm,to):
         if frm.finished:
             raise Exception("Illegal move: Lyfo is finished.")
         ball = frm.storage.Get()
@@ -37,15 +37,6 @@ class lyfo:
             raise Exception(f"Illegal move: Can't put ball '{ball}' in lyfo.")
         else:
             to.storage.Put(ball)
-        if to.nrColors == 0:
-            to.nrColors += 1
-        if not ball in frm.storage.Show():
-            frm.nrColors -= 1
-        to.Finished()
-
-    def MoveBall(frm,to):
-        ball = frm.storage.Get()
-        to.storage.Put(ball)
         if to.nrColors == 0:
             to.nrColors += 1
         if not ball in frm.storage.Show():

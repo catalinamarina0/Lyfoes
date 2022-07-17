@@ -6,14 +6,16 @@ class status:
     def __init__(self,tubes):
         self.lyfoes = [lyfo(tube) for tube in tubes]
         self.Sort()
-        self.nrLyfoes = len(self.lyfoes)
+        self.nrLyfoes = len(self.lyfoes)        #TODO: What is this for?
     
+    #TODO: Refer to SameColorDifferentLyfo?
     def IsLegalMove(self,frmIndex,toIndex):
         return (frmIndex != toIndex 
                 and self.lyfoes[frmIndex].CanGetFrom() 
                 and self.lyfoes[toIndex].CanPutInto(self.lyfoes[frmIndex].Peek()))
 
     def LegalMoves(self):
+        "Generate a set of all legal moves."
         self.moves = {(frmIndex,toIndex) for frmIndex in range(len(self.lyfoes)) 
                     for toIndex in range(len(self.lyfoes)) 
                     if self.IsLegalMove(frmIndex,toIndex)}
@@ -27,14 +29,25 @@ class status:
     def Copy(self):
         return copy.deepcopy(self)
         
+    def SameColorDifferentLyfo(self, move: tuple):
+        if self.lyfoes[move[1]].storage.Empty():    #TODO: Private
+            ball = self.lyfoes[move[0]].Peek()
+            for lyfoe in self.lyfoes:
+                if lyfoe.nrColors == 1:     #TODO: Private
+                    if ball == lyfoe.Peek():
+                        return True
+        return False
+
     def Moves(self):
         "Generates all statuses one move away from the current status."
-        self.newStatuses = []
+        newStatuses = []
         for move in self.moves:
-            stat = self.Copy()
-            stat.Move(move)
-            stat.Sort()
-            self.newStatuses.append(stat)
+            if not self.SameColorDifferentLyfo(move):
+                stat = self.Copy()
+                stat.Move(move)
+                stat.Sort()
+                newStatuses.append(stat)
+        self.newStatuses = newStatuses
 
     def NewStatuses(self):
         return self.newStatuses
@@ -74,6 +87,7 @@ class field:
                 return False
         return True
 
+    #TODO: Make comprehensive
     def AddNewStatuses(self,stat: status):
         lst = []
         newStatuses = stat.NewStatuses()

@@ -1,6 +1,11 @@
 import Status
 #from Lyfo import lyfo
 
+def Config():
+    printAll = 0
+    tubes = TestTubes1_1()
+    return printAll,tubes
+
 def TestTubes1_1():     #10 turns
     t1 = "ryby"
     t2 = "rrbb"
@@ -42,31 +47,31 @@ def TestTubes3_1():     #23 turns
     return t1,t2,t3,t4,t5,t6,t7,t8,t9
 
 def TestTubes4_1():
-    t1 = "dlyw"
-    t2 = "lygb"
+    t1 = "dayw"
+    t2 = "aygb"
     t3 = "bpgr"
     t4 = "rypg"
-    t5 = "lrop"
+    t5 = "arop"
     t6 = "dwwo"
     t7 = "bdol"
     t8 = "olap"
     t9 = "lgdl"
-    t9 = "rbyw"
-    t9 = ""
-    t9 = ""
-    return t1,t2,t3,t4,t5,t6,t7,t8,t9
+    t10 = "rbyw"
+    t11 = ""
+    t12 = ""
+    return t1,t2,t3,t4,t5,t6,t7,t8,t9,t10,t11,t12
 
 def CheckValidityTubes(tubes):
-    balls = {}
+    nrBalls = {}
     for tube in tubes:
-        for ball in tube:
-            if ball in balls:
-                balls[ball] += 1
+        for color in tube:
+            if color in nrBalls:
+                nrBalls[color] += 1
             else:
-                balls[ball] = 1
-    for color in balls:
-        if balls[color] != 4:
-            raise Exception(f"Wrong setup: {balls[color]} balls have color {color}.")
+                nrBalls[color] = 1
+    for color in nrBalls:
+        if nrBalls[color] != 4:
+            raise Exception(f"Wrong setup: {nrBalls[color]} balls have color '{color}'.")
 
 def MakeStatus(tubes):
     stat = Status.status(tubes)
@@ -77,10 +82,10 @@ def Run(lst: list,f: Status.field):
     turn = 0
     won = 0
     while won == False and len(lst[turn]) > 0:
+        lst.append([])
         for stat in lst[turn]:
             if stat.HasWon():
                 won = True
-            lst.append([])
             stat.LegalMoves()
             stat.Moves()
     #        stats.add(stat)
@@ -88,7 +93,7 @@ def Run(lst: list,f: Status.field):
             lst[turn + 1] += f.AddNewStatuses(stat)
         print(len(lst[turn + 1]))
         turn += 1
-    return turn
+    return turn - 1
 
 def PrintStatuses(turn,lst):
     print(f"\nStatuses after {turn} turns:")
@@ -99,8 +104,7 @@ def PrintStatuses(turn,lst):
 
 #TODO: Clean up
 def main():
-    printAll = 0
-    tubes = TestTubes2_1()
+    printAll, tubes = Config()
     CheckValidityTubes(tubes)
     lst = []
     initialStatus = MakeStatus(tubes)
@@ -118,14 +122,13 @@ def main():
     print("Number of new statuses each turn:")
     turn = Run(lst,f)
     #TODO: lst has lots of empty elements
-    print(f"Finished in {turn - 1} turns.")
+    print(f"Finished in {turn} turns.")
 
     if printAll:
-        for turnNr in range(turn):
+        for turnNr in range(turn + 1):
             PrintStatuses(turnNr,lst)
     else:
-        PrintStatuses(turn - 1,lst)
-
+        PrintStatuses(turn,lst)
 
 if __name__ == "__main__":
     main()
