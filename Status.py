@@ -6,6 +6,7 @@ class status:
     def __init__(self,tubes):
         self.lyfoes = [lyfo(tube) for tube in tubes]
         self.Sort()
+        self.ConvertToString()
         self.nrLyfoes = len(self.lyfoes)        #TODO: What is this for?
     
     #TODO: Refer to SameColorDifferentLyfo?
@@ -46,6 +47,7 @@ class status:
                 stat = self.Copy()
                 stat.Move(move)
                 stat.Sort()
+                stat.ConvertToString()      #TODO? Is copied to new statuses, but subsequently overwritten.
                 newStatuses.append(stat)
         self.newStatuses = newStatuses
 
@@ -55,6 +57,17 @@ class status:
     def Sort(self):
         self.lyfoes.sort(key=operator.attrgetter('storage.queue'))  #TODO: Private
 
+    def ConvertToString(self):
+        string = ""
+        for lyfoe in self.lyfoes:
+            s = lyfoe.Show()
+            string += s + (4 - len(s)) * " "
+        self.string = string
+
+    def String(self):
+        return self.string
+
+#TODO: No longer used
     def Equals(self,other):
         for lyfoIndex in range(len(self.lyfoes)):
             if not self.lyfoes[lyfoIndex].Equals(other.lyfoes[lyfoIndex]):
@@ -76,16 +89,14 @@ class status:
 class field:
     "A field is a collection of all statuses thusfar encountered."
     def __init__(self,stat: status):
-        self.statuses = {stat}
+        self.statuses = {stat.String()}
 
     def AddStatus(self,stat: status):
-        self.statuses.add(stat)
+        self.statuses.add(stat.String())
 
+#TODO: Set
     def IsNewStatus(self,newStat: status):
-        for stat in self.statuses:
-            if stat.Equals(newStat):
-                return False
-        return True
+        return not newStat.String() in self.statuses
 
     #TODO: Make comprehensive
     def AddNewStatuses(self,stat: status):

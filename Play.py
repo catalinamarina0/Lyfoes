@@ -3,7 +3,7 @@ import Status
 
 def Config():
     printAll = 0
-    tubes = TestTubes1_1()
+    tubes = TestTubes5_1()
     return printAll,tubes
 
 def TestTubes1_1():     #10 turns
@@ -46,7 +46,7 @@ def TestTubes3_1():     #23 turns
     t9 = ""
     return t1,t2,t3,t4,t5,t6,t7,t8,t9
 
-def TestTubes4_1():
+def TestTubes4_1():     #42 turns
     t1 = "dayw"
     t2 = "aygb"
     t3 = "bpgr"
@@ -60,6 +60,26 @@ def TestTubes4_1():
     t11 = ""
     t12 = ""
     return t1,t2,t3,t4,t5,t6,t7,t8,t9,t10,t11,t12
+
+def TestTubes5_1():     #70 turns
+    t1 = "lmpm"
+    t2 = "lggm"
+    t3 = "xpbe"
+    t4 = "aorl"
+    t5 = "zdwb"
+    t6 = "rboy"
+    t7 = "dwao"
+    t8 = "otpz"
+    t9 = "zbwx"
+    t10 = "xyyp"
+    t11 = "ltda"
+    t12 = "edgy"
+    t13 = "meae"
+    t14 = "zxtr"
+    t15 = "rwgt"
+    t16 = ""
+    t17 = ""
+    return t1,t2,t3,t4,t5,t6,t7,t8,t9,t10,t11,t12,t13,t14,t15,t16,t17
 
 def CheckValidityTubes(tubes):
     nrBalls = {}
