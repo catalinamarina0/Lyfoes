@@ -1,9 +1,10 @@
 import Status
+import ShowSolution
 #from Lyfo import lyfo
 
 def Config():
     printAll = 0
-    tubes = TestTubes5_1()
+    tubes = TestTubes2_1()
     return printAll,tubes
 
 def TestTubes1_1():     #10 turns
@@ -61,6 +62,21 @@ def TestTubes4_1():     #42 turns
     t12 = ""
     return t1,t2,t3,t4,t5,t6,t7,t8,t9,t10,t11,t12
 
+def TestTubes4_2():     #39 turns
+    t1 = "romy"
+    t2 = "gygg"
+    t3 = "allo"
+    t4 = "rylb"
+    t5 = "pmpa"
+    t6 = "wmrl"
+    t7 = "mbpo"
+    t8 = "owap"
+    t9 = "ywrw"
+    t10 = "bbga"
+    t11 = ""
+    t12 = ""
+    return t1,t2,t3,t4,t5,t6,t7,t8,t9,t10,t11,t12
+
 def TestTubes5_1():     #70 turns
     t1 = "lmpm"
     t2 = "lggm"
@@ -98,20 +114,22 @@ def MakeStatus(tubes):
     return stat
 
 #TODO: Clean up
-def Run(lst: list,f: Status.field):
-    turn = 0
+def Run(allStatuses: list,f: Status.field):
+    turn = 1
     won = 0
-    while won == False and len(lst[turn]) > 0:
-        lst.append([])
-        for stat in lst[turn]:
+    while won == False and len(allStatuses[turn]) > 0:
+#        print(allStatuses)
+        allStatuses.append([])
+#        print(allStatuses)
+        for stat in allStatuses[turn]:
             if stat.HasWon():
                 won = True
             stat.LegalMoves()
             stat.Moves()
     #        stats.add(stat)
         #for stat in stats:
-            lst[turn + 1] += f.AddNewStatuses(stat)
-        print(len(lst[turn + 1]))
+            allStatuses[turn + 1] += f.AddNewStatuses(stat)
+        print(len(allStatuses[turn + 1]))
         turn += 1
     return turn - 1
 
@@ -126,13 +144,13 @@ def PrintStatuses(turn,lst):
 def main():
     printAll, tubes = Config()
     CheckValidityTubes(tubes)
-    lst = []
+    allStatuses = []
     initialStatus = MakeStatus(tubes)
     f = Status.field(initialStatus)
-    lst.append([initialStatus])
+    allStatuses.append([initialStatus])
     initialStatus.LegalMoves()
     initialStatus.Moves()
-    lst.append(f.AddNewStatuses(initialStatus))
+    allStatuses += [f.AddNewStatuses(initialStatus)]
 
 #    print(f.statuses)
 
@@ -140,15 +158,38 @@ def main():
 #    for turn in range(13):
 
     print("Number of new statuses each turn:")
-    turn = Run(lst,f)
-    #TODO: lst has lots of empty elements
+    turn = Run(allStatuses,f)
+    #TODO: allStatuses has empty elements
     print(f"Finished in {turn} turns.")
 
     if printAll:
         for turnNr in range(turn + 1):
-            PrintStatuses(turnNr,lst)
+            PrintStatuses(turnNr,allStatuses)
     else:
-        PrintStatuses(turn,lst)
+        PrintStatuses(turn,allStatuses)
+
+
+#Show statuses of solution
+    for stat in allStatuses[turn]:
+        if stat.HasWon():
+            statRevert = stat
+            break
+    allRelevantStatuses = [statRevert]
+    print(turn,statRevert.Show())
+    while turn > 0:
+        statRevert = ShowSolution.FindPreviousStatus(allStatuses,statRevert,turn)
+        turn -= 1
+        allRelevantStatuses += [statRevert]
+        print(turn,statRevert.Show())
+    
+    moves = []
+    unsortedStat = MakeStatus(tubes)
+    for turn in range(1,len(allStatuses)-1):
+        nextStat = allRelevantStatuses[-turn-1]     #TODO: Check index
+        move = ShowSolution.FindUnsortedMove(unsortedStat,nextStat)
+        moves.append(move)
+        ShowSolution.FindNextUnsortedStatus(unsortedStat,move)
+    print(moves)
 
 if __name__ == "__main__":
     main()

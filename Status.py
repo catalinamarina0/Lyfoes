@@ -5,9 +5,8 @@ import operator
 class status:
     def __init__(self,tubes):
         self.lyfoes = [lyfo(tube) for tube in tubes]
-        self.Sort()
         self.ConvertToString()
-        self.nrLyfoes = len(self.lyfoes)        #TODO: What is this for?
+#        self.nrLyfoes = len(self.lyfoes)        #TODO: What is this for?
     
     #TODO: Refer to SameColorDifferentLyfo?
     def IsLegalMove(self,frmIndex,toIndex):
@@ -90,11 +89,11 @@ class field:
     "A field is a collection of all statuses thusfar encountered."
     def __init__(self,stat: status):
         self.statuses = {stat.String()}
+        stat.Sort()
 
     def AddStatus(self,stat: status):
         self.statuses.add(stat.String())
 
-#TODO: Set
     def IsNewStatus(self,newStat: status):
         return not newStat.String() in self.statuses
 
@@ -107,7 +106,3 @@ class field:
                 self.AddStatus(newStatus)
                 lst.append(newStatus)
         return lst
-
-    
-
-

@@ -34,7 +34,7 @@ class lyfo:
             raise Exception("Illegal move: Lyfo is finished.")
         ball = frm.storage.Get()
         if not to.CanPutInto(ball):
-            raise Exception(f"Illegal move: Can't put ball '{ball}' in lyfo.")
+            raise Exception(f"Illegal move: Can't put ball '{ball}' in lyfo '{to.Show()}'.")
         else:
             to.storage.Put(ball)
         if to.nrColors == 0:
